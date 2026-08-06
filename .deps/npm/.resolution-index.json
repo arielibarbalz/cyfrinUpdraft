@@ -1,16 +1,26 @@
 {
-  "AddFiveStorage.sol": {
-    "__sources__": {}
-  },
   "StorageFactory.sol": {
     "./SimpleStorage.sol": "SimpleStorage.sol",
     "__sources__": {
       "StorageFactory.sol": {
-        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\nimport \"./SimpleStorage.sol\";\n\ncontract StorageFactory {\n    SimpleStorage[] public listOfSimpleStorageContracts;\n\n    function createSimpleStorageContract() public {\n        SimpleStorage simpleStorageContractVariable = new SimpleStorage();\n        listOfSimpleStorageContracts.push(simpleStorageContractVariable);\n    }\n    \n    function sfStore(uint256 _simpleStorageIndex, uint256 _simpleStorageNumber) public {}\n    function sfGet(uint256 _simpleStorageIndex) public view returns (uint256) {\n    }\n\n}",
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\nimport \"./SimpleStorage.sol\";\n\ncontract StorageFactory {\n    SimpleStorage[] public listOfSimpleStorageContracts;\n\n    function createSimpleStorageContract() public {\n        SimpleStorage simpleStorageContractVariable = new SimpleStorage();\n        listOfSimpleStorageContracts.push(simpleStorageContractVariable);\n    }\n    \n    function sfStore(uint256 _simpleStorageIndex, uint256 _simpleStorageNumber) public {\n        listOfSimpleStorageContracts[_simpleStorageIndex].store(_simpleStorageNumber);\n    }\n    function sfGet(uint256 _simpleStorageIndex) public view returns (uint256) {\n        return listOfSimpleStorageContracts[_simpleStorageIndex].retrieve();\n    }\n\n}",
         "file": "StorageFactory.sol"
       },
       "SimpleStorage.sol": {
-        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ncontract SimpleStorage {\n\n    uint256 myFavoriteNumber;\n\n    // uint256[] listOfFavoriteNumbers;\n\n\n    struct Person{\n        uint256 favoriteNumber;\n        string name;\n    }\n\n    Person[] public listOfPeople;\n\n    mapping (string => uint256) public nameToFavoriteNumber;\n \n    function store(uint256 _favoriteNumber) public{\n        myFavoriteNumber = _favoriteNumber;\n    }\n    function retrieve() public view returns (uint256){\n        return myFavoriteNumber;\n    }\n\n    function addPerson(string memory _name, uint256 _favoriteNumber) public{\n        listOfPeople.push(Person(_favoriteNumber, _name));\n        nameToFavoriteNumber[_name] = _favoriteNumber;\n    }\n}",
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ncontract SimpleStorage {\n\n    uint256 myFavoriteNumber;\n\n    // uint256[] listOfFavoriteNumbers;\n\n\n    struct Person{\n        uint256 favoriteNumber;\n        string name;\n    }\n\n    Person[] public listOfPeople;\n\n    mapping (string => uint256) public nameToFavoriteNumber;\n \n    function store(uint256 _favoriteNumber) public virtual {\n        myFavoriteNumber = _favoriteNumber;\n    }\n    function retrieve() public view returns (uint256){\n        return myFavoriteNumber;\n    }\n\n    function addPerson(string memory _name, uint256 _favoriteNumber) public{\n        listOfPeople.push(Person(_favoriteNumber, _name));\n        nameToFavoriteNumber[_name] = _favoriteNumber;\n    }\n}",
+        "file": "SimpleStorage.sol"
+      }
+    }
+  },
+  "AddFiveStorage.sol": {
+    "./SimpleStorage.sol": "SimpleStorage.sol",
+    "__sources__": {
+      "AddFiveStorage.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\nimport {SimpleStorage} from \"./SimpleStorage.sol\";\n\n\ncontract AddFiveStorage is SimpleStorage{\n\n    function store(uint256 _newFavNumber) public override {\n        myFavoriteNumber = _newFavNumber + 5;\n    } \n}",
+        "file": "AddFiveStorage.sol"
+      },
+      "SimpleStorage.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ncontract SimpleStorage {\n\n    uint256 myFavoriteNumber;\n\n    // uint256[] listOfFavoriteNumbers;\n\n\n    struct Person{\n        uint256 favoriteNumber;\n        string name;\n    }\n\n    Person[] public listOfPeople;\n\n    mapping (string => uint256) public nameToFavoriteNumber;\n \n    function store(uint256 _favoriteNumber) public virtual {\n        myFavoriteNumber = _favoriteNumber;\n    }\n    function retrieve() public view returns (uint256){\n        return myFavoriteNumber;\n    }\n\n    function addPerson(string memory _name, uint256 _favoriteNumber) public{\n        listOfPeople.push(Person(_favoriteNumber, _name));\n        nameToFavoriteNumber[_name] = _favoriteNumber;\n    }\n}",
         "file": "SimpleStorage.sol"
       }
     }
