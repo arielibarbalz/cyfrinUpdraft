@@ -1,4 +1,25 @@
 {
+  "DividirSuma.sol": {
+    "./Suma.sol": "Suma.sol",
+    "__sources__": {
+      "DividirSuma.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\nimport {Suma} from \"./Suma.sol\";\n\ncontract DividirSuma is Suma{\n    function sumar(uint256 a, uint256 b, uint256 _divisor) public override {\n        \n    }\n}",
+        "file": "DividirSuma.sol"
+      },
+      "Suma.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ncontract Suma{\n    uint256 resultado;\n    function sumar(uint256 a, uint256 b) public virtual returns  (uint256){\n        resultado = a + b;\n        return resultado;\n    } \n    function getResultado() public view returns (uint256){\n        return resultado;\n    }\n}",
+        "file": "Suma.sol"
+      }
+    }
+  },
+  "Suma.sol": {
+    "__sources__": {
+      "Suma.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ncontract Suma{\n    uint256 resultado;\n    function sumar(uint256 a, uint256 b) public virtual returns  (uint256){\n        resultado = a + b;\n        return resultado;\n    } \n    function getResultado() public view returns (uint256){\n        return resultado;\n    }\n}",
+        "file": "Suma.sol"
+      }
+    }
+  },
   "StorageFactory.sol": {
     "./SimpleStorage.sol": "SimpleStorage.sol",
     "__sources__": {
