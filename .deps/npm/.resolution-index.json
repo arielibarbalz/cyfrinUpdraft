@@ -46,11 +46,49 @@
       }
     }
   },
-  "SimpleStorage.sol": {
+  "BTCPriceContract.sol": {
+    "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol": ".deps/npm/@chainlink/contracts@1.5.0/src/v0.8/shared/interfaces/AggregatorV3Interface.sol",
     "__sources__": {
-      "SimpleStorage.sol": {
-        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ncontract SimpleStorage {\n\n    uint256 myFavoriteNumber;\n\n    // uint256[] listOfFavoriteNumbers;\n\n\n    struct Person{\n        uint256 favoriteNumber;\n        string name;\n    }\n\n    Person[] public listOfPeople;\n\n    mapping (string => uint256) public nameToFavoriteNumber;\n \n    function store(uint256 _favoriteNumber) public virtual {\n        myFavoriteNumber = _favoriteNumber;\n    }\n    function retrieve() public view returns (uint256){\n        return myFavoriteNumber;\n    }\n\n    function addPerson(string memory _name, uint256 _favoriteNumber) public{\n        listOfPeople.push(Person(_favoriteNumber, _name));\n        nameToFavoriteNumber[_name] = _favoriteNumber;\n    }\n}",
-        "file": "SimpleStorage.sol"
+      "BTCPriceContract.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.18;\n\nimport \"@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol\";\n\ncontract BTCPriceContract{\n    AggregatorV3Interface internal priceFeed;\n    constructor() public payable{\n        priceFeed = AggregatorV3Interface(0x5fb1616F78dA7aFC9FF79e0371741a747D2a7F22);\n    }\n    function getLatestBTCPrice() public view returns(uint256){\n        (,int answer,,,) = priceFeed.latestRoundData();\n        return uint(answer);\n    }\n}",
+        "file": "BTCPriceContract.sol"
+      },
+      "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\n// solhint-disable-next-line interface-starts-with-i\ninterface AggregatorV3Interface {\n  function decimals() external view returns (uint8);\n\n  function description() external view returns (string memory);\n\n  function version() external view returns (uint256);\n\n  function getRoundData(\n    uint80 _roundId\n  ) external view returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);\n\n  function latestRoundData()\n    external\n    view\n    returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);\n}\n",
+        "file": "@chainlink/contracts@1.5.0/src/v0.8/shared/interfaces/AggregatorV3Interface.sol"
+      }
+    }
+  },
+  "PriceConverter.sol": {
+    "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol": ".deps/npm/@chainlink/contracts@1.5.0/src/v0.8/shared/interfaces/AggregatorV3Interface.sol"
+  },
+  "FundMe.sol": {
+    "./PriceConverter.sol": "PriceConverter.sol",
+    "./MathLibrary.sol": "MathLibrary.sol",
+    "__sources__": {
+      "FundMe.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.18;\n\n// import \"@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol\";\n\nimport {PriceConverter} from \"./PriceConverter.sol\";\nusing PriceConverter for uint256;\nimport{MathLibrary} from \"./MathLibrary.sol\";\ncontract FundMe {\n    using MathLibrary for uint256;\n    // 5 USD con 18 decimales (misma precisión que getConversionRate)\n    uint256 public minimumUsd = 5 * 1e18;\n    address[] funders;\n    mapping(address funder => uint256 amountFunded) public addressToAmountFunded;\n\n    function fund() public payable {\n        require(msg.value.getConversionRate() >= minimumUsd,\n            \"Didn't send enough ETH\"\n        );\n        funders.push(msg.sender);\n        addressToAmountFunded[msg.sender] = addressToAmountFunded[msg.sender] + msg.value;\n    }\n    function calculateSum(uint256 a, uint256 b) public pure returns (uint256){\n        uint256 result = Ma\n        return MathLibrary.sum(a, b);                                                                                                                                                                      \n        }\n    }\n\n    /*\n    function getPrice() public view returns (uint256) {\n        //Address\n        //ABI \n        AggregatorV3Interface priceFeed = AggregatorV3Interface(\n            0x694AA1769357215DE4FAC081bf1f309aDC325306\n        );\n        (, int256 price, , , ) = priceFeed.latestRoundData();\n        return uint256(price * 1e10);\n    }\n\n    function getConversionRate(uint256 ethAmount) public view returns (uint256) {\n        uint256 ethPrice = getPrice();\n        uint256 ethAmountUsd = (ethPrice * ethAmount) / 1e18;\n        return ethAmountUsd;\n    }\n    function getVersion() public view returns(uint256) {\n        return AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306).version();\n    }\n    */",
+        "file": "FundMe.sol"
+      },
+      "PriceConverter.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.18;\n\nimport {AggregatorV3Interface} from \"@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol\";\n\nlibrary PriceConverter {\n    function getPrice() internal view returns  (uint256) {\n        //Address\n        //ABI \n        AggregatorV3Interface priceFeed = AggregatorV3Interface(\n            0x694AA1769357215DE4FAC081bf1f309aDC325306\n        );\n        (, int256 price, , , ) = priceFeed.latestRoundData();\n        return uint256(price * 1e10);\n    }\n\n    function getConversionRate(uint256 ethAmount) internal view returns (uint256) {\n        uint256 ethPrice = getPrice();\n        uint256 ethAmountUsd = (ethPrice * ethAmount) / 1e18;\n        return ethAmountUsd;\n    }\n    function getVersion() internal view returns(uint256) {\n        return AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306).version();\n    }\n}   ",
+        "file": "PriceConverter.sol"
+      },
+      "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\n// solhint-disable-next-line interface-starts-with-i\ninterface AggregatorV3Interface {\n  function decimals() external view returns (uint8);\n\n  function description() external view returns (string memory);\n\n  function version() external view returns (uint256);\n\n  function getRoundData(\n    uint80 _roundId\n  ) external view returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);\n\n  function latestRoundData()\n    external\n    view\n    returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);\n}\n",
+        "file": "@chainlink/contracts@1.5.0/src/v0.8/shared/interfaces/AggregatorV3Interface.sol"
+      },
+      "MathLibrary.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.18;\n\nlibrary MathLibrary {\n    function sum(uint256 a, uint256 b) internal pure returns (uint256){\n        return a + b;\n    }\n}",
+        "file": "MathLibrary.sol"
+      }
+    }
+  },
+  "MathLibrary.sol": {
+    "__sources__": {
+      "MathLibrary.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.18;\n\nlibrary MathLibrary {\n    function sum(uint256 a, uint256 b) internal pure returns (uint256){\n        return a + b;\n    }\n}",
+        "file": "MathLibrary.sol"
       }
     }
   },
@@ -67,29 +105,11 @@
       }
     }
   },
-  "BTCPriceContract.sol": {
-    "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol": ".deps/npm/@chainlink/contracts@1.5.0/src/v0.8/shared/interfaces/AggregatorV3Interface.sol",
+  "SafeMathTester.sol": {
     "__sources__": {
-      "BTCPriceContract.sol": {
-        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.18;\n\nimport \"@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol\";\n\ncontract BTCPriceContract{\n    AggregatorV3Interface internal priceFeed;\n    constructor() public payable{\n        priceFeed = AggregatorV3Interface(0x5fb1616F78dA7aFC9FF79e0371741a747D2a7F22);\n    }\n    function getLatestBTCPrice() public view returns(uint256){\n        (,int answer,,,) = priceFeed.latestRoundData();\n        return uint(answer);\n    }\n}",
-        "file": "BTCPriceContract.sol"
-      },
-      "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol": {
-        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\n// solhint-disable-next-line interface-starts-with-i\ninterface AggregatorV3Interface {\n  function decimals() external view returns (uint8);\n\n  function description() external view returns (string memory);\n\n  function version() external view returns (uint256);\n\n  function getRoundData(\n    uint80 _roundId\n  ) external view returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);\n\n  function latestRoundData()\n    external\n    view\n    returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);\n}\n",
-        "file": "@chainlink/contracts@1.5.0/src/v0.8/shared/interfaces/AggregatorV3Interface.sol"
-      }
-    }
-  },
-  "FundMe.sol": {
-    "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol": ".deps/npm/@chainlink/contracts@1.5.0/src/v0.8/shared/interfaces/AggregatorV3Interface.sol",
-    "__sources__": {
-      "FundMe.sol": {
-        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.18;\n\nimport \"@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol\";\n\ncontract FundMe {\n    // 5 USD con 18 decimales (misma precisión que getConversionRate)\n    uint256 public minimumUsd = 5 * 1e18;\n\n    function fund() public payable {\n        require(\n            getConversionRate(msg.value) >= minimumUsd,\n            \"Didn't send enough ETH\"\n        );\n    }\n\n    function getPrice() public view returns (uint256) {\n        AggregatorV3Interface priceFeed = AggregatorV3Interface(\n            0x694AA1769357215DE4FAC081bf1f309aDC325306\n        );\n        (, int256 price, , , ) = priceFeed.latestRoundData();\n        return uint256(price * 1e10);\n    }\n\n    function getConversionRate(uint256 ethAmount) public view returns (uint256) {\n        uint256 ethPrice = getPrice();\n        uint256 ethAmountUsd = (ethPrice * ethAmount) / 1e18;\n        return ethAmountUsd;\n    }\n}",
-        "file": "FundMe.sol"
-      },
-      "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol": {
-        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\n// solhint-disable-next-line interface-starts-with-i\ninterface AggregatorV3Interface {\n  function decimals() external view returns (uint8);\n\n  function description() external view returns (string memory);\n\n  function version() external view returns (uint256);\n\n  function getRoundData(\n    uint80 _roundId\n  ) external view returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);\n\n  function latestRoundData()\n    external\n    view\n    returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);\n}\n",
-        "file": "@chainlink/contracts@1.5.0/src/v0.8/shared/interfaces/AggregatorV3Interface.sol"
+      "SafeMathTester.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity 0.8.36;\n\ncontract SafeMathTester {\n    uint8 public bigNumber = 255;\n\n    function add() public {\n        unchecked {bigNumber = bigNumber + 1;}\n    }\n }",
+        "file": "SafeMathTester.sol"
       }
     }
   }
