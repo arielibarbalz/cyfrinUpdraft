@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.36+commit.8a079791"
+		"version": "0.8.38+commit.1835d247"
 	},
 	"language": "Solidity",
 	"output": {
@@ -54,11 +54,11 @@
 	},
 	"sources": {
 		"SafeMathTester.sol": {
-			"keccak256": "0xbf7ef6886df7b5c751d8cf012417296285ef68b76022a1ea262182464182c195",
+			"keccak256": "0xc2f60885d3778090f980d9d2f715152e45458ea04fc40522b19fbf5fe383e14f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://fcd9aa942533c43a47b1e2f3ec37db2384c3c7685382cad72bd4b74bd9f066e1",
-				"dweb:/ipfs/QmXSrmW2FXtPmdKwTWMt4Dpj8YtzMhcKUASC1jQ4xYLrE7"
+				"bzz-raw://4eec948d8e6c1175ba20fffb85786268cf114a36336d2040d5d9cdcd03edfa40",
+				"dweb:/ipfs/QmarmPy47EmKn6fo9izzr8dC54hi8q5H7T9zfWRhXnhvmR"
 			]
 		}
 	},

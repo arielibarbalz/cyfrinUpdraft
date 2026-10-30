@@ -12,6 +12,9 @@ contract FundMe {
     uint256 public minimumUsd = 5 * 1e18;
     address[] funders;
     mapping(address funder => uint256 amountFunded) public addressToAmountFunded;
+    uint256 funderIndex;
+
+
 
     function fund() public payable {
         require(msg.value.getConversionRate() >= minimumUsd,
@@ -20,12 +23,20 @@ contract FundMe {
         funders.push(msg.sender);
         addressToAmountFunded[msg.sender] = addressToAmountFunded[msg.sender] + msg.value;
     }
-    function calculateSum(uint256 a, uint256 b) public pure returns (uint256){
-        uint256 result = Ma
-        return MathLibrary.sum(a, b);                                                                                                                                                                      
+    
+    function withdraw() public {
+        for (funderIndex = 0; funderIndex < funders.length; funderIndex++){
+        address funders = funders[funderIndex];
+        addressToAmountFunded[funders] = 0;
         }
+        funders = new address[](0);
     }
 
+    function calculateSum(uint256 a, uint256 b) public pure returns (uint256){
+        return MathLibrary.sum(a, b);                                                                                                                                                                      
+        }
+    
+    }
     /*
     function getPrice() public view returns (uint256) {
         //Address

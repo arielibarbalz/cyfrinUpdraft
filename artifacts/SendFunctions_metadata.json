@@ -1,0 +1,68 @@
+{
+	"compiler": {
+		"version": "0.8.34+commit.80d5c536"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address payable",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "callAmountTo",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"SendFunctions.sol": "SendFunctions"
+		},
+		"evmVersion": "osaka",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"SendFunctions.sol": {
+			"keccak256": "0x5fe950634ef888d6ae67377e8e850c0f05fde7ec9a66eb2c5a44a3009a02ee09",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://8490dad0833891daca30ad7ac7e90e4c8daa6f6789e18d523493f89185effafe",
+				"dweb:/ipfs/QmctnTcHf99zuTZzWLnxXaAm8j74oc6f8MD6dZbP3hj6T7"
+			]
+		}
+	},
+	"version": 1
+}
